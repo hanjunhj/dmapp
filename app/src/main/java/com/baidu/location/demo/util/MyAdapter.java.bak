@@ -1,0 +1,60 @@
+package com.baidu.location.demo.util;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+
+import com.baidu.location.demo.R;
+import com.baidu.location.demo.vo.EventInfo;
+
+import java.util.List;
+
+public class MyAdapter extends ArrayAdapter<EventInfo> {
+    private Context mContext;
+    private LayoutInflater mLayoutInflater;
+    private List<EventInfo> listInfo;
+    public MyAdapter(@NonNull Context context, int resource, @NonNull List<EventInfo> list) {
+        super(context, resource, list);
+        this.mContext=context;
+        mLayoutInflater =LayoutInflater.from(context);
+        listInfo=list;
+    }
+
+    public void add(EventInfo info){
+        listInfo.add(info);
+        notifyDataSetChanged();
+    }
+
+    static class ViewHolder{
+        public ImageView imageView;
+        public TextView tvTitle,tvTime,tvContext;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        //ViewHolder
+        EventInfo info = (EventInfo) getItem(position);//
+        ViewHolder holder = null;
+        if (convertView == null){
+            convertView = mLayoutInflater.inflate(R.layout.layout_list_item,null);
+            holder = new ViewHolder();
+            holder.tvTitle= (TextView) convertView.findViewById(R.id.tv_listTitle_Id);
+            holder.tvTime = (TextView) convertView.findViewById(R.id.tv_listTime_Id);
+            holder.tvContext= (TextView) convertView.findViewById(R.id.tv_listContext_Id);
+            convertView.setTag(holder);
+        }else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+        holder.tvTitle.setText(info.getEventName());
+        holder.tvTime.setText(info.getEventTypeName());
+        holder.tvContext.setText(info.getOccurrenceAreaName());
+
+        return convertView;
+    }
+}

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#D999"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/devided_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/action_bar_devided_line" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_layout"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_pauseFence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp5"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_change_btn"
+            android:text="暂停监听"
+            android:textColor="@color/color_btn_text"
+            android:textSize="13dp" />
+
+        <Button
+            android:id="@+id/bt_resumeFence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp5"
+            android:layout_marginRight="7dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_change_btn"
+            android:text="恢复监听"
+            android:textColor="@color/color_btn_text"
+            android:textSize="13dp" />
+
+        <Button
+            android:id="@+id/bt_removeFence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp5"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_change_btn"
+            android:gravity="center"
+            android:text="删除所\n有围栏"
+            android:textColor="@color/color_btn_text"
+            android:textSize="13dp" />
+
+        <Button
+            android:id="@+id/bt_addFence"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp5"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_change_btn"
+            android:text="添加围栏"
+            android:textColor="@color/color_btn_text"
+            android:textSize="13dp" />
+
+        <Button
+            android:id="@+id/bt_option"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp5"
+            android:layout_weight="1"
+            android:background="@drawable/custom_change_btn"
+            android:text="显示设置"
+            android:textColor="@color/color_btn_text"
+            android:textSize="13dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ly_option"
+        android:background="@color/color_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioGroup
+                android:layout_marginLeft="@dimen/dp20"
+                android:id="@+id/rg_fenceType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RadioButton
+                    android:id="@+id/rb_roundFence"
+                    style="@style/package_radio_style"
+                    android:paddingTop="@dimen/dp0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="圆形围栏" />
+
+                <RadioButton
+                    style="@style/package_radio_style"
+                    android:id="@+id/rb_polygonFence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="多边形围栏" />
+
+                <RadioButton
+                    style="@style/package_radio_style"
+                    android:id="@+id/rb_keywordFence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Poi围栏(行政区划检索)" />
+
+                <RadioButton
+                    style="@style/package_radio_style"
+                    android:id="@+id/rb_nearbyFence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Poi围栏(圆形区域检索)" />
+
+                <RadioButton
+                    style="@style/package_radio_style"
+                    android:id="@+id/rb_districeFence"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="行政区划围栏" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/et_customId"
+                        android:background="@drawable/edit_background"
+                        android:layout_width="@dimen/dp100"
+                        android:layout_height="@dimen/dp24"
+                        android:paddingLeft="@dimen/dp5"
+                        android:textSize="@dimen/dp14"
+                        android:hint="业务ID">
+
+                        <requestFocus />
+                    </EditText>
+
+                    <EditText
+                        android:id="@+id/et_keyword"
+                        android:background="@drawable/edit_background"
+                        android:layout_width="@dimen/dp100"
+                        android:layout_height="@dimen/dp24"
+                        android:paddingLeft="@dimen/dp5"
+                        android:layout_marginTop="@dimen/dp8"
+                        android:textSize="@dimen/dp14"
+                        android:hint="关键字"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/et_city"
+                        android:background="@drawable/edit_background"
+                        android:layout_width="@dimen/dp100"
+                        android:layout_height="@dimen/dp24"
+                        android:paddingLeft="@dimen/dp5"
+                        android:layout_marginTop="@dimen/dp8"
+                        android:textSize="@dimen/dp14"
+                        android:hint="城市"
+                        android:visibility="gone" />
+
+                    <EditText
+                        android:id="@+id/et_poitype"
+                        android:background="@drawable/edit_background"
+                        android:layout_width="@dimen/dp100"
+                        android:layout_height="@dimen/dp24"
+                        android:paddingLeft="@dimen/dp5"
+                        android:layout_marginTop="@dimen/dp8"
+                        android:hint="POI类型"
+                        android:textSize="@dimen/dp14"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/et_radius"
+                        android:background="@drawable/edit_background"
+                        android:layout_width="@dimen/dp100"
+                        android:layout_height="@dimen/dp24"
+                        android:paddingLeft="@dimen/dp5"
+                        android:layout_marginTop="@dimen/dp8"
+                        android:hint="围栏半径"
+                        android:inputType="numberDecimal"
+                        android:textSize="@dimen/dp14"
+                        android:visibility="gone" />
+
+                    <EditText
+                        android:id="@+id/et_fenceSize"
+                        android:background="@drawable/edit_background"
+                        android:layout_width="@dimen/dp100"
+                        android:layout_height="@dimen/dp24"
+                        android:paddingLeft="@dimen/dp5"
+                        android:layout_marginTop="@dimen/dp8"
+                        android:hint="最大围栏数量"
+                        android:textSize="@dimen/dp14"
+                        android:inputType="numberSigned"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:id="@+id/line_view"
+            android:layout_marginLeft="@dimen/dp26"
+            android:layout_marginTop="@dimen/dp10"
+            android:layout_width="@dimen/dp345"
+            android:layout_height="1px"
+            android:background="#B3BCBABA" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp15"
+            android:layout_marginLeft="@dimen/dp20"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:textColor="@color/color_black"
+                android:text="触发条件" />
+
+            <CheckBox
+                android:id="@+id/cb_alertIn"
+                style="@style/CustomCheckboxTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:paddingLeft="10dp"
+                android:checked="true"
+                android:text="进入" />
+
+            <CheckBox
+                android:id="@+id/cb_alertOut"
+                style="@style/CustomCheckboxTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:paddingLeft="10dp"
+                android:text="离开" />
+
+            <CheckBox
+                android:id="@+id/cb_alertStated"
+                android:layout_width="wrap_content"
+                style="@style/CustomCheckboxTheme"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_weight="2.0"
+                android:text="停留" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp20"
+            android:layout_marginTop="@dimen/dp10"
+            android:layout_marginBottom="@dimen/dp5"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_black"
+                android:text="触发次数" />
+
+            <EditText
+                android:id="@+id/in_num"
+                android:background="@drawable/edit_background"
+                android:layout_width="@dimen/dp80"
+                android:layout_height="@dimen/dp24"
+                android:paddingLeft="@dimen/dp5"
+                android:layout_marginLeft="@dimen/dp20"
+                android:layout_marginRight="@dimen/dp8"
+                android:hint="进入" />
+
+            <EditText
+                android:id="@+id/out_num"
+                android:background="@drawable/edit_background"
+                android:layout_width="@dimen/dp80"
+                android:layout_height="@dimen/dp24"
+                android:paddingLeft="@dimen/dp10"
+                android:layout_marginRight="@dimen/dp8"
+                android:enabled="false"
+                android:hint="离开" />
+
+            <EditText
+                android:id="@+id/stay_num"
+                android:background="@drawable/edit_background"
+                android:layout_width="@dimen/dp80"
+                android:layout_height="@dimen/dp24"
+                android:paddingLeft="@dimen/dp10"
+                android:enabled="false"
+                android:hint="停留" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_guide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

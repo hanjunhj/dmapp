@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_field1"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field2"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field3"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field4"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field5"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field6"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field7"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field8"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field9"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field10"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field11"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field12"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field13"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field14"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field15"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/tv_field16"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:ellipsize="end" />
+
+</LinearLayout>

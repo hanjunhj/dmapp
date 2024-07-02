@@ -1,0 +1,395 @@
+package com.baidu.location.demo;
+
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+//import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+//import androidx.drawerlayout.widget.DrawerLayout;
+
+
+import com.baidu.geofence.GeoFenceClient;
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.demo.util.Http;
+import com.baidu.location.demo.util.HttpResponse;
+import com.baidu.location.demo.util.KeyValuePair;
+import com.baidu.location.demo.vo.EventInfo;
+import com.baidu.location.demo.vo.EventType;
+import com.baidu.location.demo.vo.OccurrenceArea;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.CircleOptions;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.Stroke;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.model.LatLngBounds;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+
+// event
+public class MapActivity extends AppCompatActivity implements BaiduMap.OnMapClickListener{
+    private SharedPreferences sharedPreferences;
+    private ImageButton btn_back;
+    private EditText event_name;
+    private EditText lat_value;
+    private EditText lon_value;
+    private EditText time_occ;
+    private Spinner event_type;
+    private Spinner occurrence_area;
+    private EditText event_desc;
+    private EditText reporter_name;
+    private EditText reporter_tel;
+    private Button btn_refresh;
+    private double markerLatitude = 0;
+    private double markerLongitude = 0;
+    private List<Map<String, Object>> items = new ArrayList<>();
+
+    private LocationClient mlocationClient;
+    private MapView mMapView;
+    private BaiduMap mBdMap;
+    // 中心点坐标
+    private LatLng centerLatLng = null;
+    private List<Marker> markerList = new ArrayList<>();
+    private LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+    // 中心点marker
+    private Marker centerMarker;
+    private MarkerOptions markerOption = null;
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_map);
+
+        // 初始化存储
+        sharedPreferences = getSharedPreferences("wms", Context.MODE_PRIVATE);
+
+        // 控件们
+        this.btn_back = findViewById(R.id.btn_back);
+        this.event_name = findViewById(R.id.event_name);
+        this.time_occ = findViewById(R.id.time_occ);
+        this.lat_value = findViewById(R.id.lat_value);
+        this.lon_value = findViewById(R.id.lon_value);
+        this.event_type = findViewById(R.id.event_type);
+        this.occurrence_area = findViewById(R.id.occurrence_area);
+        this.event_desc = findViewById(R.id.event_desc);
+        this.reporter_name = findViewById(R.id.reporter_name);
+        this.reporter_tel = findViewById(R.id.reporter_tel);
+        this.btn_refresh = findViewById(R.id.btn_refresh);
+
+        HttpResponse<EventType[]> httpResponse1 = Http.Request2("eventtype", null, EventType[].class);
+        ArrayList<KeyValuePair> arrayList1 = new ArrayList<>();
+        arrayList1.add(new KeyValuePair("", "No limit"));
+        if (httpResponse1 != null) {
+            for (EventType item : httpResponse1.Data) {
+                arrayList1.add(new KeyValuePair(item.typeCode, item.typeName));
+            }
+            event_type.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, arrayList1));
+        }
+
+        HttpResponse<OccurrenceArea[]> httpResponse2 = Http.Request2("occurrencearea", null, OccurrenceArea[].class);
+        ArrayList<KeyValuePair> arrayList2 = new ArrayList<>();
+        arrayList2.add(new KeyValuePair("", "No limit"));
+        if (httpResponse1 != null) {
+            for (OccurrenceArea item : httpResponse2.Data) {
+                arrayList2.add(new KeyValuePair(item.areaCode, item.areaName));
+            }
+            occurrence_area.setAdapter(new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, arrayList2));
+        }
+
+        this.mMapView = findViewById(R.id.map);
+        markerOption = new MarkerOptions().draggable(true);
+        init();
+        mlocationClient = new LocationClient(getApplicationContext());
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true);// open gps
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        option.setCoorType(GeoFenceClient.BD09LL);
+        option.setScanSpan(0);
+        option.setIsNeedAddress(true);
+        option.setOpenGps(true);
+        option.setIsNeedLocationDescribe(true);
+        option.setIsNeedLocationPoiList(true);
+        option.setIgnoreKillProcess(false);
+        option.SetIgnoreCacheException(false);
+        option.setEnableSimulateGps(false);
+        mlocationClient.setLocOption(option);
+        MyLocationListener myLocationListener = new MyLocationListener();
+        mlocationClient.registerLocationListener(myLocationListener);
+        mlocationClient.start();
+
+        this.btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MapActivity.this.finish();
+            }
+        });
+
+        this.time_occ.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                DatePickerDialog dialog = new DatePickerDialog(MapActivity.this, listener,
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH));
+                dialog.show();
+
+            }
+        });
+
+        this.btn_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isDateStringValid(time_occ.getText().toString().trim())){
+                    if(time_occ.getText().length()==10){
+                        if(isStringValid(event_name.getText().toString())
+                                || isStringValid(lat_value.getText().toString())
+                                || isStringValid(lon_value.getText().toString())
+                        )
+                        {
+                            Toast.makeText(MapActivity.this, "Date format error", Toast.LENGTH_SHORT).show();
+                        }else{
+                            EventInfo eventInfo = new EventInfo();
+                            eventInfo.eventName = String.valueOf(event_name.getText());
+                            eventInfo.timeOcc = String.valueOf(time_occ.getText());
+                            eventInfo.eventType = String.valueOf(((KeyValuePair) event_type.getSelectedItem()).Key);
+                            eventInfo.latValue = String.valueOf(lat_value.getText());
+                            eventInfo.lonValue = String.valueOf(lon_value.getText());
+                            eventInfo.eventDesc = String.valueOf(event_desc.getText());
+                            eventInfo.reporterName = String.valueOf(reporter_name.getText());
+                            eventInfo.reporterTel = String.valueOf(reporter_tel.getText());
+                            eventInfo.occurrenceArea = String.valueOf(((KeyValuePair) occurrence_area.getSelectedItem()).Key);
+                            HttpResponse<EventInfo> response = Http.Request1("insert", eventInfo, EventInfo.class);
+                            if (response.Code.equals("200")) {
+                                Toast.makeText(MapActivity.this, "Upload event successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MapActivity.this, response.Msg, Toast.LENGTH_SHORT).show();
+                            }
+                            event_name.setText("");
+                            time_occ.setText("");
+                            event_type.setSelection(0);
+                            occurrence_area.setSelection(0);
+                            lat_value.setText("");
+                            lon_value.setText("");
+                            event_desc.setText("");
+                            reporter_name.setText("");
+                            reporter_tel.setText("");
+                        }
+                    } else {
+                        Toast.makeText(MapActivity.this, "Not date format", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MapActivity.this, "Not date format", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        });
+
+    }
+
+    private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+
+            if(monthOfYear + 1 < 10 && dayOfMonth < 10) {
+                time_occ.setText(year + "-0" + (monthOfYear + 1) + "-0" + dayOfMonth);
+            }else if(monthOfYear + 1 < 10 && dayOfMonth >= 10){
+                time_occ.setText(year + "-0" + (monthOfYear + 1) + "-" + dayOfMonth);
+            }else if(monthOfYear + 1 >= 10 && dayOfMonth < 10){
+                time_occ.setText(year + "-" + (monthOfYear + 1) + "-0" + dayOfMonth);
+            }else if(monthOfYear + 1 >= 10 && dayOfMonth >= 10){
+                time_occ.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+            }
+        }
+    };
+    public boolean isDateStringValid(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            sdf.parse(date);
+            return true;
+        } catch (java.text.ParseException e) {
+            return false;
+        }
+    }
+
+    public boolean isStringValid(String data) {
+        if(data.isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    void init() {
+        if (mBdMap == null) {
+            mMapView.showScaleControl(true);
+            mMapView.removeViewAt(1);//
+            mBdMap = mMapView.getMap();
+            mBdMap.setMyLocationEnabled(true);
+            mBdMap.getUiSettings().setRotateGesturesEnabled(false);
+            mBdMap.setOnMapClickListener(this);
+            loadData();
+        }
+    }
+    private void loadData() {
+        EventInfo eventInfo = new EventInfo();
+        HttpResponse<EventInfo[]> httpResponse = Http.Request2("list", eventInfo, EventInfo[].class);
+        if (httpResponse != null) {
+            this.items.clear();
+            for (EventInfo item : httpResponse.Data) {
+                centerLatLng = new LatLng(Double.parseDouble(item.latValue), Double.parseDouble(item.lonValue));
+                mBdMap.addOverlay(new CircleOptions().center(centerLatLng)
+                        .radius(50)
+                        .fillColor(0xffffff00)
+                        .stroke(new Stroke(3, 0xE66495ED)));
+
+                boundsBuilder.include(centerLatLng);
+            }
+        }
+    }
+
+    @Override
+    public void onMapClick(LatLng point) {
+        markerOption.icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker));
+        centerLatLng = point;
+        addCenterMarker(centerLatLng);
+        try {
+
+            lat_value.setText(String.valueOf(centerLatLng.latitude));
+            lon_value.setText(String.valueOf(centerLatLng.longitude));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    private void addCenterMarker(LatLng latlng) {
+        if (null == centerMarker) {
+            centerMarker = (Marker) mBdMap.addOverlay(new MarkerOptions().position(latlng).icon(BitmapDescriptorFactory
+                    .fromResource(R.mipmap.marker)));
+        }
+        centerMarker.setPosition(latlng);
+        centerMarker.setVisible(true);
+        markerList.add(centerMarker);
+    }
+
+    @Override
+    public void onMapPoiClick(MapPoi mapPoi) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mMapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+        mMapView = null;
+        if (null != mlocationClient) {
+            mlocationClient.stopIndoorMode();
+            mlocationClient.stop();
+            mlocationClient = null;
+            mBdMap.clear();
+            mBdMap.setMyLocationEnabled(false);
+            mBdMap = null;
+
+        }
+    }
+
+    public class MyLocationListener extends BDAbstractLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            float radius = location.getRadius();
+            String coorType = location.getCoorType();
+            int errorCode = location.getLocType();
+            Toast.makeText(MapActivity.this,location.getAddrStr(),Toast.LENGTH_SHORT).show();
+            if (location == null || mMapView == null) {
+                return;
+            }
+            double resultLatitude;
+            double resultLongitude;
+
+            if (markerLatitude == 0) {
+                resultLatitude = location.getLatitude();
+                resultLongitude = location.getLongitude();
+            } else {
+                resultLatitude = markerLatitude;
+                resultLongitude = markerLongitude;
+            }
+            Intent intent = getIntent();
+            if (intent != null) {
+                String lon = intent.getStringExtra("lon");
+                String lat = intent.getStringExtra("lat");
+                if(lon != null){
+                    MyLocationData locData = new MyLocationData.Builder()
+                            .latitude(Double.parseDouble(lat))
+                            .longitude(Double.parseDouble(lon))
+                            .build();
+
+                    mBdMap.setMyLocationData(locData);
+                    LatLng latLng = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+                    MapStatus.Builder builder = new MapStatus.Builder();
+                    builder.target(latLng).zoom(20.0f);
+                    mBdMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+                }else {
+                    MyLocationData locData = new MyLocationData.Builder()
+                            .accuracy(location.getRadius())
+                            .direction(location.getDirection())
+                            .latitude(resultLatitude)
+                            .longitude(resultLongitude)
+                            .build();
+
+                    mBdMap.setMyLocationData(locData);
+                    LatLng latLng = new LatLng(resultLatitude, resultLongitude);
+                    MapStatus.Builder builder = new MapStatus.Builder();
+                    builder.target(latLng).zoom(20.0f);
+                    mBdMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+                }
+            }
+        }
+    }
+}

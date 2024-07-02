@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="GeoAppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="GeoAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="GeoAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:contentScrim="?attr/colorPrimary"
+            android:background="@color/indigo_500"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_gravity="left"
+                    android:text="Menu"
+                    android:textSize="18dp"
+                    android:textColor="@color/white" />
+
+                <ImageButton
+                    android:id="@+id/btn_back"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_gravity="right"
+                    android:padding="8dp"
+                    android:background="@color/transparent"
+                    android:scaleType="fitXY"
+                    app:srcCompat="@drawable/app_logout" />
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <TableLayout
+        android:layout_width="404dp"
+        android:layout_height="303dp"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/btn_event"
+                android:layout_width="139dp"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/map"
+                android:text="New Event"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/btn_list"
+                android:layout_width="139dp"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/list"
+                android:text="Current Events"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/btn_news"
+                android:layout_width="138dp"
+                android:background="@color/transparent"
+                android:drawableTop="@drawable/news"
+                android:text="News"
+                android:textColor="@color/black" />
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
